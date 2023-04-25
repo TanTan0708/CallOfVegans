@@ -19,6 +19,10 @@ player_walk_images = [pygame.image.load("sprite_0.png"), pygame.image.load("spri
 
 player_weapon = pygame.image.load("enemyAnimations/karrotgun.png")
 arrow_1 = pygame.image.load("enemyAnimations/arrow2.png")
+
+pygame.mixer.music.load("bro isrs dont now.mp3")
+pygame.mixer.music.play(-1)
+
 #player_weapon.set_colorkey((0, 0, 0))
 
 
@@ -177,8 +181,10 @@ class SlimeEnemy:
 
         #damage
         for bullet in player_bullets:
-            if s.collidepoint(bullet.x, bullet.y):
-                self.zombieHealth -= 1
+            if s.collidepoint(bullet.x + 25, bullet.y + 40):
+                self.zombieHealth -= 5 #damageVariable
+                player_bullets.remove(bullet) #disappear
+
 
 
 
@@ -252,7 +258,25 @@ while True:
 
     keys = pygame.key.get_pressed()
 
-    box = pygame.draw.rect(display, (255, 255, 255), (100-display_scroll[0], 100-display_scroll[1], 16, 16)) # square
+    #tree = pygame.draw.rect(display, (255, 255, 255), (100-display_scroll[0], 100-display_scroll[1], 16, 16)) # tree
+    tree1 = pygame.image.load("enemyAnimations/tree.png")
+    tree2 = display.blit(pygame.transform.scale(tree1, (160, 160)),
+                         (100-display_scroll[0], 100-display_scroll[1]))
+    tree3 = display.blit(pygame.transform.scale(tree1, (160, 160)),
+                         (300 - display_scroll[0], 0 - display_scroll[1]))
+    tree4 = display.blit(pygame.transform.scale(tree1, (160, 160)),
+                         (-100 - display_scroll[0], -100 - display_scroll[1]))
+    tree5 = display.blit(pygame.transform.scale(tree1, (160, 160)),
+                         (500 - display_scroll[0], -300 - display_scroll[1]))
+    tree6 = display.blit(pygame.transform.scale(tree1, (160, 160)),
+                         (-100 - display_scroll[0], -100 - display_scroll[1]))
+    tree7 = display.blit(pygame.transform.scale(tree1, (160, 160)),
+                         (-300 - display_scroll[0], 0 - display_scroll[1]))
+    tree8 = display.blit(pygame.transform.scale(tree1, (160, 160)),
+                         (100 - display_scroll[0], 100 - display_scroll[1]))
+    tree9 = display.blit(pygame.transform.scale(tree1, (160, 160)),
+                         (-500 - display_scroll[0], 300 - display_scroll[1]))
+
 
 
     if keys[pygame.K_a]:
@@ -272,9 +296,48 @@ while True:
     if keys[pygame.K_w]:
         display_scroll[1] -= 5
 
+
         for bullet in player_bullets:
             bullet.y += 5
     if keys[pygame.K_s]:
+        display_scroll[1] += 5
+
+        for bullet in player_bullets:
+            bullet.y -= 5
+
+    if keys[pygame.K_s] + keys[pygame.K_a]:
+        player.moving_right = False
+
+    if keys[pygame.K_s] + keys[pygame.K_d]:
+        player.moving_right = True
+
+    if keys[pygame.K_w] + keys[pygame.K_a]:
+        player.moving_right = False
+
+    if keys[pygame.K_w] + keys[pygame.K_d]:
+        player.moving_right = True
+
+    #added code / arrow keys
+
+    if keys[pygame.K_LEFT]:
+        display_scroll[0] -= 5
+
+        player.moving_left = True
+
+        for bullet in player_bullets:
+            bullet.x += 5
+    if keys[pygame.K_RIGHT]:
+        display_scroll[0] += 5
+
+        player.moving_right = True
+
+    if keys[pygame.K_UP]:
+        display_scroll[1] -= 5
+
+        for bullet in player_bullets:
+            bullet.y += 5
+
+    if keys[pygame.K_DOWN]:
         display_scroll[1] += 5
 
         for bullet in player_bullets:
