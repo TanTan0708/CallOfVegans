@@ -2,11 +2,14 @@ import pygame
 import sys
 import math
 import random
+from pyvidplayer import Video
+import time
 
 pygame.init()
 
 display = pygame.display.set_mode((800, 600))
 clock = pygame.time.Clock()
+
 
 player_walk_images = [pygame.image.load("sprite_0.png"), pygame.image.load("sprite_1.png"),
                       pygame.image.load("sprite_2.png"), pygame.image.load("sprite_3.png"),
@@ -20,10 +23,40 @@ player_walk_images = [pygame.image.load("sprite_0.png"), pygame.image.load("spri
 player_weapon = pygame.image.load("enemyAnimations/karrotgun.png")
 arrow_1 = pygame.image.load("enemyAnimations/arrow2.png")
 
-pygame.mixer.music.load("bro isrs dont now.mp3")
-pygame.mixer.music.play(-1)
+
+
 
 #player_weapon.set_colorkey((0, 0, 0))
+
+
+vid = Video("DOUBLE A.mp4")
+
+vid.set_size((800, 600))
+
+start = time.time()
+
+pygame.mixer.music.load("bro isrs dont now.mp3")
+pygame.mixer.music.play(-1)
+pygame.mixer.music.pause()
+
+def intro():
+    while True:
+        vid.draw(display, (0, 0), force_draw=False)
+        pygame.display.update()
+        elapsed = time.time() - start
+        if elapsed > 4.869:
+            vid.close()
+            main_game()
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                vid.close()
+                main_game()
+
+
+
+
+
+
 
 
 
@@ -237,135 +270,139 @@ player_bullets = []
 
 
 
-while True:
-    display.fill((24, 164, 86))
+def main_game():
+    while True:
+        pygame.mixer.music.unpause()
+        display.fill((24, 164, 86))
 
-    mouse_x, mouse_y = pygame.mouse.get_pos()
-
-
-
-
-
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            sys.exit()
-            pygame.QUIT
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == 1:
-                player_bullets.append(PlayerBullet(player.x, player.y, mouse_x, mouse_y))
+        mouse_x, mouse_y = pygame.mouse.get_pos()
 
 
-
-    keys = pygame.key.get_pressed()
-
-    #tree = pygame.draw.rect(display, (255, 255, 255), (100-display_scroll[0], 100-display_scroll[1], 16, 16)) # tree
-    tree1 = pygame.image.load("enemyAnimations/tree.png")
-    tree2 = display.blit(pygame.transform.scale(tree1, (160, 160)),
-                         (100-display_scroll[0], 100-display_scroll[1]))
-    tree3 = display.blit(pygame.transform.scale(tree1, (160, 160)),
-                         (300 - display_scroll[0], 0 - display_scroll[1]))
-    tree4 = display.blit(pygame.transform.scale(tree1, (160, 160)),
-                         (-100 - display_scroll[0], -100 - display_scroll[1]))
-    tree5 = display.blit(pygame.transform.scale(tree1, (160, 160)),
-                         (500 - display_scroll[0], -300 - display_scroll[1]))
-    tree6 = display.blit(pygame.transform.scale(tree1, (160, 160)),
-                         (-100 - display_scroll[0], -100 - display_scroll[1]))
-    tree7 = display.blit(pygame.transform.scale(tree1, (160, 160)),
-                         (-300 - display_scroll[0], 0 - display_scroll[1]))
-    tree8 = display.blit(pygame.transform.scale(tree1, (160, 160)),
-                         (100 - display_scroll[0], 100 - display_scroll[1]))
-    tree9 = display.blit(pygame.transform.scale(tree1, (160, 160)),
-                         (-500 - display_scroll[0], 300 - display_scroll[1]))
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+                pygame.QUIT
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    player_bullets.append(PlayerBullet(player.x, player.y, mouse_x, mouse_y))
 
 
 
-    if keys[pygame.K_a]:
-        display_scroll[0] -= 5
+        keys = pygame.key.get_pressed()
 
-        player.moving_left = True
+        #tree = pygame.draw.rect(display, (255, 255, 255), (100-display_scroll[0], 100-display_scroll[1], 16, 16)) # tree
+        tree1 = pygame.image.load("enemyAnimations/tree.png")
+        tree2 = display.blit(pygame.transform.scale(tree1, (160, 160)),
+                             (100-display_scroll[0], 100-display_scroll[1]))
+        tree3 = display.blit(pygame.transform.scale(tree1, (160, 160)),
+                             (300 - display_scroll[0], 0 - display_scroll[1]))
+        tree4 = display.blit(pygame.transform.scale(tree1, (160, 160)),
+                             (-100 - display_scroll[0], -100 - display_scroll[1]))
+        tree5 = display.blit(pygame.transform.scale(tree1, (160, 160)),
+                             (500 - display_scroll[0], -300 - display_scroll[1]))
+        tree6 = display.blit(pygame.transform.scale(tree1, (160, 160)),
+                             (-100 - display_scroll[0], -100 - display_scroll[1]))
+        tree7 = display.blit(pygame.transform.scale(tree1, (160, 160)),
+                             (-300 - display_scroll[0], 0 - display_scroll[1]))
+        tree8 = display.blit(pygame.transform.scale(tree1, (160, 160)),
+                             (100 - display_scroll[0], 100 - display_scroll[1]))
+        tree9 = display.blit(pygame.transform.scale(tree1, (160, 160)),
+                             (-500 - display_scroll[0], 300 - display_scroll[1]))
+
+
+
+        if keys[pygame.K_a]:
+            display_scroll[0] -= 5
+
+            player.moving_left = True
+
+            for bullet in player_bullets:
+                bullet.x += 5
+        if keys[pygame.K_d]:
+            display_scroll[0] += 5
+
+            player.moving_right = True
+
+            for bullet in player_bullets:
+                bullet.x -= 5
+        if keys[pygame.K_w]:
+            display_scroll[1] -= 5
+
+
+            for bullet in player_bullets:
+                bullet.y += 5
+        if keys[pygame.K_s]:
+            display_scroll[1] += 5
+
+            for bullet in player_bullets:
+                bullet.y -= 5
+
+        if keys[pygame.K_s] + keys[pygame.K_a]:
+            player.moving_right = False
+
+        if keys[pygame.K_s] + keys[pygame.K_d]:
+            player.moving_right = True
+
+        if keys[pygame.K_w] + keys[pygame.K_a]:
+            player.moving_right = False
+
+        if keys[pygame.K_w] + keys[pygame.K_d]:
+            player.moving_right = True
+
+        #added code / arrow keys
+
+        if keys[pygame.K_LEFT]:
+            display_scroll[0] -= 5
+
+            player.moving_left = True
+
+            for bullet in player_bullets:
+                bullet.x += 5
+        if keys[pygame.K_RIGHT]:
+            display_scroll[0] += 5
+
+            player.moving_right = True
+
+        if keys[pygame.K_UP]:
+            display_scroll[1] -= 5
+
+            for bullet in player_bullets:
+                bullet.y += 5
+
+        if keys[pygame.K_DOWN]:
+            display_scroll[1] += 5
+
+            for bullet in player_bullets:
+                bullet.y -= 5
+
+        player.main(display)
+
+
+
+
 
         for bullet in player_bullets:
-            bullet.x += 5
-    if keys[pygame.K_d]:
-        display_scroll[0] += 5
-
-        player.moving_right = True
-
-        for bullet in player_bullets:
-            bullet.x -= 5
-    if keys[pygame.K_w]:
-        display_scroll[1] -= 5
-
-
-        for bullet in player_bullets:
-            bullet.y += 5
-    if keys[pygame.K_s]:
-        display_scroll[1] += 5
-
-        for bullet in player_bullets:
-            bullet.y -= 5
-
-    if keys[pygame.K_s] + keys[pygame.K_a]:
-        player.moving_right = False
-
-    if keys[pygame.K_s] + keys[pygame.K_d]:
-        player.moving_right = True
-
-    if keys[pygame.K_w] + keys[pygame.K_a]:
-        player.moving_right = False
-
-    if keys[pygame.K_w] + keys[pygame.K_d]:
-        player.moving_right = True
-
-    #added code / arrow keys
-
-    if keys[pygame.K_LEFT]:
-        display_scroll[0] -= 5
-
-        player.moving_left = True
-
-        for bullet in player_bullets:
-            bullet.x += 5
-    if keys[pygame.K_RIGHT]:
-        display_scroll[0] += 5
-
-        player.moving_right = True
-
-    if keys[pygame.K_UP]:
-        display_scroll[1] -= 5
-
-        for bullet in player_bullets:
-            bullet.y += 5
-
-    if keys[pygame.K_DOWN]:
-        display_scroll[1] += 5
-
-        for bullet in player_bullets:
-            bullet.y -= 5
-
-    player.main(display)
+            bullet.main(display)
 
 
 
 
-
-    for bullet in player_bullets:
-        bullet.main(display)
-
-
-
-
-    for enemy in enemies:
-        enemy.main(display)
-
-
-
-
-
-
-    '''for bullet in player_bullets:
         for enemy in enemies:
-            if display.get_at((bullet.x, bullet.y)) == (58, 188, 59):
-                zombieHealth -= 5'''
-    clock.tick(60)
-    pygame.display.update()
+            enemy.main(display)
+
+
+
+
+
+
+        '''for bullet in player_bullets:
+            for enemy in enemies:
+                if display.get_at((bullet.x, bullet.y)) == (58, 188, 59):
+                    zombieHealth -= 5'''
+        clock.tick(60)
+        pygame.display.update()
+
+
+intro()
+
+
